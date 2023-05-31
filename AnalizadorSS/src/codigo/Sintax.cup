@@ -1,0 +1,41 @@
+package codigo;
+
+import java_cup.runtime.Symbol;
+
+parser code
+{:
+    private Symbol s;
+
+    public void syntax_error(Symbol s){
+        this.s = s;
+    }
+
+    public Symbol getS(){
+        return this.s;
+    }
+:};
+
+terminal espacioCuatro, Igual, Suma, Resta, Multiplicacion, Division,
+Variable, Numero, Exponente, SimbEsp, Parentesis_A,Parentesis_C, Llave_A, Llave_C, ERROR;
+non terminal Ecuaciones, Ecuacion, Expresion, Termino, Factor, Atom;
+
+start with Ecuaciones;
+
+Ecuaciones ::= Ecuacion
+            | Ecuacion espacioCuatro Ecuacion
+            | Ecuacion ERROR
+            | Ecuacion NULL;
+
+Ecuacion ::= Expresion Igual Expresion 
+            | Resta Expresion Igual Expresion 
+            | Variable Exponente Expresion Igual Expresion 
+            | Resta Variable Exponente Expresion Igual Expresion;
+
+Expresion ::= Termino | Expresion Suma Termino | Expresion Resta Termino;                  
+
+Termino ::= Factor | Termino Multiplicacion Factor | Termino Division Factor | Termino Multiplicacion Multiplicacion Factor;
+
+Factor ::= Atom | Atom Exponente Factor | Variable;
+
+Atom ::= Numero | Parentesis_A Expresion Parentesis_C | Numero Variable;
+
